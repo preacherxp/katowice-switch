@@ -21,6 +21,8 @@
     mat('SILVER_D','#9baaaa');
     mat('SILVER_L','#e2e5dd');
     mat('HULL','#667c83');
+    mat('DISTANT','#aab8bf');
+    mat('DISTANT_D','#93a3ad');
     mat('BRICK','#9c4e39');
     mat('BRICK_D','#713a30');
     mat('RED_REVEAL','#cb392d');
@@ -154,15 +156,20 @@
   };
   const drawSpodek = (w) => {
     const cx = 184;
-    // A low silver saucer and its asymmetric roof, with open sky above the rim.
-    for (let dx = -58; dx <= 58; dx++) {
-      const curve = Math.sqrt(Math.max(0, 1 - dx * dx / (59 * 59)));
-      const roof = 91 - Math.round(curve * 20) + Math.round(dx * .04);
-      const rim = 98 + Math.round(dx * .035);
-      for (let y = roof; y <= rim; y++) w.px(cx + dx, y, y === roof ? M.SILVER_L : (y + dx) % 5 === 0 ? M.SILVER_D : M.SILVER);
-      const bottom = 99 + Math.round(curve * 12);
-      for (let y = rim + 1; y < bottom; y++) w.px(cx + dx, y, y % 3 === 0 ? M.SILVER_D : M.HULL);
-      w.tube(cx + dx, rim, M.TRIM, N.EDGE, w.venueG);
+    const rim = (dx) => 98 + Math.round(dx * .035);
+    // A flat silver saucer with a shallow asymmetric roof and a thick rim, open sky around it.
+    for (let dx = -55; dx <= 55; dx++) {
+      const curve = Math.sqrt(Math.max(0, 1 - dx * dx / (56 * 56)));
+      const roof = 94 - Math.round(curve * 9) + Math.round(dx * .04);
+      for (let y = roof; y <= rim(dx); y++) w.px(cx + dx, y, y === roof ? M.SILVER_L : (y + dx) % 5 === 0 ? M.SILVER_D : M.SILVER);
+      w.tube(cx + dx, rim(dx), M.TRIM, N.EDGE, w.venueG);
+    }
+    // The inverted cone narrows from under the rim to the glazed foyer, its ribs converging downwards.
+    for (let y = 99; y < 108; y++) {
+      const half = 54 - Math.round((y - 99) * 2.4);
+      for (let dx = -half; dx <= half; dx++) {
+        if (y > rim(dx)) w.px(cx + dx, y, Math.round(dx * 54 / half) % 6 === 0 ? M.SILVER_D : M.HULL);
+      }
     }
     w.rect(155, 108, 63, 5, M.WINDOW);
     w.lightRect(157, 109, 59, 3, N.WARM_DIM, w.venueG);
@@ -196,9 +203,18 @@
     w.noSignal=true;w.walkTop=118;w.roadTop=139;
     w.venueG=w.addGroup(17.8,27,'room');
     w.depth=0;
-    for(let x=-40;x<360;x+=19)w.rect(x,97+Math.abs(x%7),18,18,M.FAR1);
+    // Hazy distant blocks fill the gaps beside .KTW; the sky under the Spodek's rim stays open.
+    for(let x=-40;x<360;x+=19){
+      if(x+18>=122&&x<=250)continue;
+      const top=97+Math.abs(x%7);
+      w.rect(x,top,18,18,M.DISTANT);
+      for(let y=top+2;y<112;y+=3)for(let dx=2;dx<16;dx+=3){
+        w.px(x+dx,y,M.DISTANT_D);
+        if((x+dx*7+y)%5===0)w.light(x+dx,y,N.WARM_DIM,w.winGroups[(dx+y)%28]);
+      }
+    }
     w.depth=2;drawSquare(w);drawKtw(w);drawSpodek(w);drawNospr(w);
-    for(const x of [-20,15,238,342]){
+    for(const x of [-20,15,342]){
       w.rect(x,104,1,18,M.TIMBER_D);tree(w,x,99,7,9,rng(x+400));
       w.rect(x-5,120,11,4,M.PLANTER);w.rect(x-5,120,11,1,M.LEAF);
     }
@@ -207,22 +223,26 @@
       const y=108+Math.round((x+40)*.12);
       w.rect(x,y,1,119-y,M.GRASS_D);w.px(x,y,M.GRASS);
     }
-    for(const x of [132,230,325]){w.rect(x,101,1,24,M.FRAME);w.rect(x-3,100,7,1,M.FRAME);w.lightRect(x-2,101,5,1,N.LED_SOFT,w.venueG);}
-    w.rect(84,132,37,2,M.STONE_D);w.rect(86,130,33,2,M.WATER);
+    // Lamps stand in the open gaps beside .KTW and the Spodek, clear of both silhouettes.
+    for(const x of [30,245,325]){w.rect(x,101,1,24,M.FRAME);w.rect(x-3,100,7,1,M.FRAME);w.lightRect(x-2,101,5,1,N.LED_SOFT,w.venueG);}
+    // A shallow basin along the .KTW podium, behind every walking lane.
+    w.rect(84,117,37,2,M.STONE_D);w.rect(86,115,33,2,M.WATER);
     w.strata=[{x:-20,y:7,w:62,v:.4},{x:176,y:19,w:70,v:.5}];
-    w.cat.x=244;w.cat.y=127;
-    for(const [x,y,dir,speed,style] of [[22,126,1,5,'coat'],[81,123,-1,6,'shirt'],[165,127,1,5,'suit'],[224,124,-1,4,'coat'],[288,128,1,5,'shirt']])w.peds.push({x,y,dir,speed,style,phase:x%3});
+    w.cat.x=252;w.cat.y=122;
+    // Lanes start at y 125: in front of the basin, planters and lamp bases, above the cycle path.
+    for(const [x,y,dir,speed,style] of [[22,126,1,5,'coat'],[81,125,-1,6,'shirt'],[165,128,1,5,'suit'],[224,127,-1,4,'coat'],[288,129,1,5,'shirt']])w.peds.push({x,y,dir,speed,style,phase:x%3});
     w.personStyles.coat=[M.GRASS_D,M.SUIT,M.HAIR];
   };
   const draw=(w,dt,hour)=>{
     drawSky(w,dt,hour);
-    // The plaza jets pulse below the landmark silhouettes, away from all signs.
-    for(const x of [92,102,112]){
-      const height=5+Math.round((Math.sin(w.t*1.6+x)+1)*3);
-      for(let j=0;j<height;j++)if((j+Math.floor(w.t*12))%4!==0)w.tube(x,130-j,M.WATER,N.WATER_LIGHT,w.venueG);
-      w.px(x-1,130-height,M.TRIM);
+    // The plaza jets pulse in front of the podium, behind the walking lanes and away from all signs.
+    for(const x of [95,102,109]){
+      const height=3+Math.round((Math.sin(w.t*1.6+x)+1)*2.5);
+      for(let j=0;j<height;j++)if((j+Math.floor(w.t*12))%4!==0)w.tube(x,115-j,M.WATER,N.WATER_LIGHT,w.venueG);
+      w.px(x-1,115-height,M.TRIM);
     }
-    w.drawPeople(dt,hour);w.drawCat(dt,hour);
+    // The cat dozes behind the lanes, so walkers pass in front of it.
+    w.drawCat(dt,hour);w.drawPeople(dt,hour);
     const bx=Math.round((w.t*13+60)%420)-50,by=144;
     for(const cx of [bx,bx+12])for(let a=0;a<Math.PI*2;a+=.3)w.px(cx+Math.round(Math.cos(a)*3),by+Math.round(Math.sin(a)*3),M.FRAME);
     for(const [x0,y0,x1,y1] of [[0,0,5,-5],[5,-5,8,0],[8,0,0,0],[5,-5,10,-5],[10,-5,12,0]])line(bx+x0,by+y0,bx+x1,by+y1,(x,y)=>w.px(x,y,M.GRASS_D));
