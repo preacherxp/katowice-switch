@@ -36,11 +36,15 @@ for (const hour of [12, 17, 18.5, 22, 26, 29, 31, 36]) {
   }
 }
 world.startle();
+const before = [world.tram.p, world.bike.x, world.puffs[0].x];
 world.tick(1 / 30, 18);
 assert.ok(world.cat.puff > 0, 'the cat still reacts to a quick drag');
+const moved = [world.tram.p, world.bike.x, world.puffs[0].x];
+assert.ok(moved.every((value, i) => Number.isFinite(value) && value !== before[i]), 'the tram, the Metrorower and the clouds advance with time');
 const frozenTime = world.t;
 world.tick(1 / 30, 22, { calm: true });
 assert.equal(world.t, frozenTime, 'reduced motion stops the scene animation');
+assert.deepEqual([world.tram.p, world.bike.x, world.puffs[0].x], moved, 'reduced motion stills the tram, the Metrorower and the clouds');
 assert.equal(world.levels[world.venueG], 1);
 
 // Optional raw frames let the same check produce a visual preview without browser dependencies.

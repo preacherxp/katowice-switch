@@ -28,9 +28,9 @@
     mat('RED_REVEAL','#cb392d');
     mat('GRASS','#839967');
     mat('GRASS_D','#47694d');
-    mat('TREE','#4d805c');
-    mat('TREE_D','#315d49');
-    mat('TREE_L','#79a16a');
+    mat('TREE','#86a95a');
+    mat('TREE_D','#557f4b');
+    mat('TREE_L','#b3cb74');
     mat('TIMBER_D','#62523d');
     mat('PLANTER','#818d87');
     mat('LEAF','#6c985e');
@@ -53,29 +53,17 @@
     ([r, g, b]) => [r * .22 + .025, g * .26 + .03, b * .36 + .045],
     ([r, g, b]) => [r * .73 + .04, g * .7 + .03, b * .77 + .04],
   ];
-  const line = (x0, y0, x1, y1, cb) => {
-    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0);
-    const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
-    let err = dx + dy;
-    for (;;) {
-      cb(x0, y0);
-      if (x0 === x1 && y0 === y1) break;
-      const e2 = err * 2;
-      if (e2 >= dy) { err += dy; x0 += sx; }
-      if (e2 <= dx) { err += dx; y0 += sy; }
-    }
-  };
-  const tree = (w, cx, cy, rw, rh, r) => {
-    for (let y = -rh; y <= rh; y++) {
-      for (let x = -rw; x <= rw; x++) {
-        const d = (x * x) / (rw * rw) + (y * y) / (rh * rh);
-        if (d > 1 + (r() - 0.5) * 0.3) continue;
+  // The young white-stemmed trees of NOSPR's forecourt: a slim pale trunk under a narrow, airy crown
+  // that is widest below the middle. Ground spots light the stems after dark.
+  const birch = (w, x, base, r) => {
+    for (let y = base - 20; y < base; y++) w.px(x, y, (y * 3 + x) % 7 ? M.TRIM : M.TIMBER_D);
+    w.lightRect(x, base - 6, 1, 6, N.WARM_DIM, w.venueG);
+    for (let j = 0; j < 23; j++) {
+      const half = Math.round(.5 + 4.6 * Math.sin(Math.PI * Math.pow(j / 22, 1.4)));
+      for (let dx = -half; dx <= half; dx++) {
         const v = r();
-        let m = M.TREE;
-        if (y > rh * 0.2 || x > rw * 0.4) m = v < 0.7 ? M.TREE_D : M.TREE;
-        else if (y < -rh * 0.25 && x < rw * 0.2) m = v < 0.55 ? M.TREE_L : M.TREE;
-        else if (v < 0.3) m = M.TREE_D;
-        w.px(cx + x, cy + y, m);
+        if (Math.abs(dx) === half ? v < .35 : v < .08) continue;
+        w.px(x + dx, base - 38 + j, dx + j * .2 > 3.5 || v > .82 ? M.TREE_D : dx < 0 && v < .5 ? M.TREE_L : M.TREE);
       }
     }
   };
@@ -94,31 +82,65 @@
     }
   };
 
+  // The view looks south from the Culture Zone, so the sun crosses from left to right: it climbs out
+  // from behind the lower .KTW tower and sinks behind NOSPR. The moon follows it over the Spodek.
   const drawSky = (w, dt, hour) => {
-    const h = hour;
-    if (h < 18.4) {
-      const t = clamp((h - 12) / (18.1 - 12));
-      const low = smooth(15.6, 17.4, h);
-      w.sun(mix(118, 8, t), mix(16, 58, t * t * t), low > 0.3 ? 6 : 5, low);
-    } else if (h > 29.2) {
-      const t = clamp((h - 29.2) / (36 - 29.2));
-      const low = 1 - smooth(30.2, 31.8, h);
-      w.sun(mix(304, 118, t), mix(82, 16, Math.sqrt(t)), low > 0.3 ? 6 : 5, low);
+    if (hour < 18.3) {
+      const t = clamp((hour - 12) / 6.2), low = smooth(15.8, 17.6, hour);
+      w.sun(mix(176, 304, t), mix(12, 70, Math.pow(t, 2.4)), low > .3 ? 6 : 5, low);
+    } else if (hour > 29.4) {
+      const t = clamp((hour - 29.4) / 6.6), low = 1 - smooth(30.4, 32, hour);
+      w.sun(mix(100, 176, t), mix(70, 12, Math.sqrt(t)), low > .3 ? 6 : 5, low);
     }
-    if (h > 18.6 && h < 29.4) w.moon(mix(96, 142, (h - 18.6) / 10.8), mix(30, 18, Math.sin(((h - 18.6) / 10.8) * Math.PI)));
-    for (const c of w.strata) {
-      c.x += c.v * dt;
-      if (c.x > 370) c.x = -c.w - 40;
+    const m = (hour - 18.8) / 10.4;
+    if (m > 0 && m < 1) w.moon(mix(108, 280, m), mix(62, 68, m) - 44 * Math.sin(m * Math.PI));
+    w.drawStars();
+    // Fair-weather cumulus with flat bases and lobed tops, carried east (leftwards here) by the westerlies.
+    for (const c of w.puffs) {
+      c.x -= c.v * dt;
+      if (c.x < -c.w - 40) c.x = 370;
       const cx = Math.round(c.x);
       for (let i = 0; i < c.w; i++) {
-        const edge = Math.min(i, c.w - i);
-        const thick = Math.round(Math.min(edge * 0.12, 1.5) + Math.sin(i * 0.17 + c.w) * 0.8 + 0.5);
-        for (let j = -thick; j <= 0; j++) {
-          if ((i + j * 3 + c.y) % 5 === 0 && edge < 18) continue;
-          w.pxSky(cx + i, c.y + j, j === 0 ? M.CLOUD_SH : M.CLOUD);
-        }
+        const u = i / (c.w - 1);
+        const top = Math.round(c.h * Math.sqrt(1 - (2 * u - 1) ** 2) * (.6 + .4 * Math.abs(Math.sin(u * Math.PI * c.lobes))));
+        for (let j = 0; j <= top; j++) w.pxSky(cx + i, c.y - j, j === 0 || (j === 1 && u > .55) ? M.CLOUD_SH : M.CLOUD);
       }
     }
+  };
+
+  // A red low-floor Tramwaje Śląskie tram on al. Korfantego, far behind the square: it shows under the
+  // Spodek's rim, calls at Katowice Rondo in the left gap and turns back out of sight behind NOSPR.
+  const drawTram = (w, dt) => {
+    const T = w.tram, LEN = 32;
+    T.p = (T.p + dt) % 60;
+    const q = T.p < 30 ? T.p : 60 - T.p, front = T.p < 30 ? LEN - 1 : 0, on = w.dark > .45;
+    const x0 = Math.round(q < 14 ? 15 * q - 86 : 124 + 15 * Math.max(0, q - 19));
+    for (let i = 0; i < LEN; i++) {
+      const x = x0 + i, joint = i === 10 || i === 21, cab = i === front;
+      w.pxBehind(x, 106, joint ? M.SILVER_D : M.BOARD_R);
+      for (let y = 107; y < 109; y++) {
+        if (joint || i === 0 || i === LEN - 1 || i % 5 === 3) w.pxBehind(x, y, joint ? M.SILVER_D : cab ? M.CAR_DK : M.BOARD_R);
+        else w.pxBehind(x, y, M.CAR_DK, on ? N.FLUO : 0, 2);
+      }
+      w.pxBehind(x, 109, joint ? M.SILVER_D : M.BOARD_R);
+      w.pxBehind(x, 110, joint ? M.SILVER_D : M.BOARD_R, on && cab ? N.HEAD : 0, 2);
+      w.pxBehind(x, 111, i % 11 > 1 && i % 11 < 7 ? M.TIRE : M.FRAME);
+    }
+    for (const [dx, y] of [[15, 105], [16, 105], [17, 105], [16, 104], [15, 103], [16, 103], [17, 103]]) w.pxBehind(x0 + dx, y, M.FRAME);
+  };
+
+  // A hired Metrorower: yellow step-through frame, yellow fairing over the rear wheel and a front basket.
+  const BIKE = ['.......HH....', '.......SS....', '.......JJJ...', '......JJJJ...', '....YS.JJJ...', '.YYYY..LLKK..', '.YYYY...Y....',
+    '....Y...YYYY.', '.KKK.Y.Y.YYY.', 'K..YK.YYKYYYK', 'K.K.K...K.K.K', 'K...K...K...K', '.KKK.....KKK.'];
+  const drawBike = (w, dt) => {
+    const B = w.bike;
+    B.x -= 16 * dt;
+    if (B.x < -70) B.x = 400;
+    const x = Math.round(B.x), y = 135, knee = Math.floor(B.x * .35) & 1;
+    w.sprite(BIKE, { H: M.TRIM, S: M.SKIN, J: M.SHIRT_B, L: M.SUIT, K: M.CAR_DK, Y: M.BOARD_Y }, x, y);
+    w.rect(x + 6 + knee, y + 6, 1, 2, M.SUIT);
+    w.px(x + 6, y + 8, M.SUIT);
+    if (w.dark > .3) { w.pxLight(x, y + 6, N.HEAD); w.pxLight(x + 12, y + 8, N.TAIL); }
   };
 
   const drawSquare = (w) => {
@@ -189,6 +211,7 @@
       w.rect(x + dx, 71, 4, 39, M.RED_REVEAL);
       w.rect(x + dx + 1, 72, 2, 37, M.WINDOW);
       w.lightRect(x + dx + 1, 93, 2, 15, N.WARM, w.venueG);
+      w.lightRect(x + dx + 1, 73, 2, 15, N.WARM_DIM, w.winGroups[(dx * 5) % 28]);
       w.rect(x + dx, 88, 4, 1, M.BRICK_D);
     }
     w.hsign(266, 66, 38, 8, 'NOSPR', { n: N.LED_SOFT, g: w.venueG, board: M.BRICK_D, off: M.TRIM });
@@ -215,7 +238,7 @@
     }
     w.depth=2;drawSquare(w);drawKtw(w);drawSpodek(w);drawNospr(w);
     for(const x of [-20,15,342]){
-      w.rect(x,104,1,18,M.TIMBER_D);tree(w,x,99,7,9,rng(x+400));
+      birch(w,x,120,rng(x+400));
       w.rect(x-5,120,11,4,M.PLANTER);w.rect(x-5,120,11,1,M.LEAF);
     }
     // MCK's planted folded roof gives the Culture Zone a green foreground edge.
@@ -225,30 +248,32 @@
     }
     // Lamps stand in the open gaps beside .KTW and the Spodek, clear of both silhouettes.
     for(const x of [30,245,325]){w.rect(x,101,1,24,M.FRAME);w.rect(x-3,100,7,1,M.FRAME);w.lightRect(x-2,101,5,1,N.LED_SOFT,w.venueG);}
+    // Flagpoles on NOSPR's forecourt stand against its brick piers, below the name.
+    for(const x of [262,271,280])w.rect(x,96,1,20,M.SILVER_L);
     // A shallow basin along the .KTW podium, behind every walking lane.
     w.rect(84,117,37,2,M.STONE_D);w.rect(86,115,33,2,M.WATER);
-    w.strata=[{x:-20,y:7,w:62,v:.4},{x:176,y:19,w:70,v:.5}];
+    w.puffs=[{x:96,y:40,w:25,h:6,lobes:3,v:.7},{x:214,y:27,w:37,h:8,lobes:4,v:.5},{x:318,y:50,w:17,h:4,lobes:2,v:.9}];
+    w.tram={p:6};w.bike={x:300};
     w.cat.x=252;w.cat.y=122;
     // Lanes start at y 125: in front of the basin, planters and lamp bases, above the cycle path.
-    for(const [x,y,dir,speed,style] of [[22,126,1,5,'coat'],[81,125,-1,6,'shirt'],[165,128,1,5,'suit'],[224,127,-1,4,'coat'],[288,129,1,5,'shirt']])w.peds.push({x,y,dir,speed,style,phase:x%3});
-    w.personStyles.coat=[M.GRASS_D,M.SUIT,M.HAIR];
+    // Evening brings a concert crowd: the last four walkers only appear after dark.
+    for(const [x,y,dir,speed,style,nightOnly] of [[22,126,1,5,'coat'],[81,125,-1,6,'shirt'],[165,128,1,5,'suit'],[224,127,-1,4,'rust'],[288,129,1,5,'pale'],[130,131,-1,5,'blue'],[250,130,1,4,'coat'],
+      [60,131,1,4,'suit',true],[196,129,1,5,'rust',true],[203,129,1,5,'pale',true],[310,130,-1,5,'blue',true]])w.peds.push({x,y,dir,speed,style,nightOnly,phase:x%3});
+    Object.assign(w.personStyles,{coat:[M.GRASS_D,M.SUIT,M.HAIR],rust:[M.BRICK,M.SUIT,M.TIMBER_D],pale:[M.SILVER_L,M.TOWER_D,M.HAIR],blue:[M.SHIRT_B,M.FRAME,M.COAT]});
   };
   const draw=(w,dt,hour)=>{
-    drawSky(w,dt,hour);
+    drawSky(w,dt,hour);drawTram(w,dt);
     // The plaza jets pulse in front of the podium, behind the walking lanes and away from all signs.
     for(const x of [95,102,109]){
       const height=3+Math.round((Math.sin(w.t*1.6+x)+1)*2.5);
       for(let j=0;j<height;j++)if((j+Math.floor(w.t*12))%4!==0)w.tube(x,115-j,M.WATER,N.WATER_LIGHT,w.venueG);
       w.px(x-1,115-height,M.TRIM);
     }
+    // The forecourt flags (Poland, the EU, Poland) stir on their poles.
+    for(const x of [262,271,280])for(let j=0;j<6;j++)w.rect(x+1+(j>1?Math.round(Math.sin(w.t*2.6+x+j*.7)*.7):0),96+j,3,1,x===271?M.BOARD_B:j<3?M.SHIRT:M.BOARD_R);
     // The cat dozes behind the lanes, so walkers pass in front of it.
     w.drawCat(dt,hour);w.drawPeople(dt,hour);
-    const bx=Math.round((w.t*13+60)%420)-50,by=144;
-    for(const cx of [bx,bx+12])for(let a=0;a<Math.PI*2;a+=.3)w.px(cx+Math.round(Math.cos(a)*3),by+Math.round(Math.sin(a)*3),M.FRAME);
-    for(const [x0,y0,x1,y1] of [[0,0,5,-5],[5,-5,8,0],[8,0,0,0],[5,-5,10,-5],[10,-5,12,0]])line(bx+x0,by+y0,bx+x1,by+y1,(x,y)=>w.px(x,y,M.GRASS_D));
-    w.rect(bx+5,by-13,3,3,M.SKIN);w.rect(bx+4,by-10,4,5,M.TOWER_D);
-    line(bx+5,by-5,bx+6+Math.floor(w.t*5)%2*2,by-1,(x,y)=>w.px(x,y,M.SUIT));
-    line(bx+7,by-8,bx+10,by-6,(x,y)=>w.px(x,y,M.SKIN));
+    drawBike(w,dt);
   };
   CitySwitch.define('katowice-switch',{
     city:'Katowice',label:'Katowice day and night',tube:['#e9af6c','#64c8e8'],body:['#e4e7e5','#111c2c'],glass:'clear',

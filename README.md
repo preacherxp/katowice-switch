@@ -37,6 +37,10 @@ GitHub Pages serves `/` from `main`.
 - [The .KTW towers](https://ktw.com.pl/en/building/).
 - [NOSPR: the building and brick façade](https://nospr.org.pl/pl/o-nas/spacer).
 - [Spodek official architecture reference](https://www.spodekkatowice.pl/pl/historia/51/).
+- [Tramwaje Śląskie fleet](https://www.tram-silesia.pl/o-spolce/wagony-tramwajowe/) and the [Katowice Rondo stop](https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3695/), for the red tram behind the Spodek.
+- [Metrorower launch, Metropolia GZM](https://metropoliagzm.pl/en/2024/02/02/metrorower-rusza-25-lutego/), for the yellow hire bicycle.
+
+[RESEARCH.md](RESEARCH.md) lists the photographs that were opened for the tram, the bicycle, the forecourt trees and flags, and what could not be verified.
 
 ## Attribution
 
