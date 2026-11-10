@@ -45,6 +45,13 @@
     neon('OFFICE','#b9d7df','#93c9df',.12);
     neon('EDGE','#e4f4f9','#91d2e7',.24);
     neon('WATER_LIGHT','#c9e5e7','#9cd5dc',.16);
+    mat('GLASS_DK','#22313b');
+    mat('MINT','#dce8bb');
+    mat('SHOP_GREEN','#6fb53f');
+    neon('MINT','#e8f3cd','#c4e39a',.2);
+    neon('SHOP_GREEN','#8fd14f','#6fc23a',.2);
+    mat('BRAND_GREEN','#00917e');
+    neon('BRAND','#c3e8cf','#41ba91',.28);
   };
   const grade = [
     ([r, g, b]) => [r, g, b],
@@ -153,6 +160,9 @@
     w.rect(-40, 137, 400, 1, M.PAVE_D);
   };
 
+  // Vaillant mark: a black hare's head facing forward, ears breaking through a green egg outline.
+  const HARE = ['..K.GGG.K..', '..KKWWWKK..', '.GKKWWWKKG.', '.GKKWWWKKG.', 'GWWKKWKKWWG', 'GWWKKKKKWWG', 'GWWKWKWKWWG',
+    'GWWKKKKKWWG', 'GWKKWKWKKWG', '.GWKKWKKWG.', '.GWWKKKWWG.', '..GGWWWGG..', '....GGG....'];
   const drawKtw = (w) => {
     // The offset glass volumes are the identifying silhouette of .KTW II.
     const blocks = [[35, 77, 43, 36], [40, 44, 43, 33], [34, 12, 43, 32], [91, 55, 34, 58]];
@@ -170,11 +180,55 @@
       for (let dx = 2; dx < width; dx += 5) w.rect(x + dx, top + 1, 1, height - 1, M.FRAME);
     }
     w.hsign(41, 16, 29, 9, '.KTW', { n: N.LED_SOFT, g: w.venueG, board: M.TOWER, off: M.TRIM });
+    // Vaillant's IT hub is a tenant of .KTW II (22nd floor). The hare and the name on the middle volume
+    // are an addition to the collage; at night the egg is a white lightbox with a green rim.
+    HARE.forEach((row, j) => [...row].forEach((c, i) => {
+      if (c === 'K') w.px(56 + i, 46 + j, M.PAINT_K);
+      else if (c !== '.') w.tube(56 + i, 46 + j, c === 'G' ? M.BRAND_GREEN : M.TRIM, c === 'G' ? N.BRAND : N.LED_SOFT, w.venueG);
+    }));
+    w.hsign(43, 61, 38, 7, 'VAILLANT', { n: N.BRAND, g: w.venueG, board: M.TOWER_D, off: M.TRIM });
     w.rect(31, 112, 99, 3, M.FRAME);
     for (let x = 42; x < 118; x += 14) {
       w.rect(x, 105, 9, 8, M.WINDOW);
       w.lightRect(x + 1, 106, 7, 6, N.WARM, w.venueG);
     }
+    drawZabka(w);
+    w.rect(49, 93, 1, 2, M.FRAME); w.rect(63, 93, 1, 2, M.FRAME);
+    w.rect(46, 95, 21, 9, M.BOARD_K);
+  };
+  // Żabka Nano on the ground floor of the lower tower (al. Roździeńskiego 1a), after an August 2024
+  // photograph: pale lettering and the smile applied straight to dark glass, a canopy over the door,
+  // the entry terminal beside it and a green-walled interior that is lit round the clock.
+  const drawZabka = (w) => {
+    w.rect(91, 93, 34, 1, M.FRAME);
+    w.rect(92, 94, 32, 19, M.GLASS_DK);
+    for (const x of [115, 118, 121]) w.rect(x, 95, 1, 10, M.TOWER_D);
+    w.hsign(92, 97, 21, 5, 'ZABKA', { n: N.MINT, g: 2, board: M.GLASS_DK, off: M.MINT });
+    // The dot of the Ż and the smile under the name.
+    for (const [x, y] of [[94, 95], [97, 103], [107, 103]]) w.tube(x, y, M.MINT, N.MINT, 2);
+    for (let x = 98; x < 107; x++) w.tube(x, 104, M.MINT, N.MINT, 2);
+    w.rect(92, 106, 12, 1, M.FRAME);
+    w.rect(94, 107, 7, 6, M.WINDOW);
+    w.lightRect(94, 107, 7, 6, N.FLUO, w.store);
+    w.rect(97, 107, 1, 6, M.FRAME);
+    w.tube(102, 109, M.WINDOW_H, N.OFFICE, w.store);
+    w.tube(103, 109, M.WINDOW_H, N.OFFICE, w.store);
+    w.rect(105, 106, 18, 2, M.SHOP_GREEN);
+    w.lightRect(105, 106, 18, 2, N.SHOP_GREEN, w.store);
+    w.rect(105, 108, 18, 5, M.STONE);
+    w.lightRect(105, 108, 18, 5, N.STORE, w.store);
+    // Shelves of goods stay unlit, so they read as dark rows against the bright shop at night.
+    for (let x = 106; x < 122; x++) for (const y of [109, 111]) w.px(x, y, [M.BOARD_R, M.BOARD_Y, M.SHOP_GREEN, M.BOARD_B, M.TRIM][(x * 3 + y) % 5]);
+    w.rect(113, 106, 1, 7, M.GLASS_DK);
+  };
+  // Katowice's old station clock, the "pod zegarem" meeting point: a black box of amber LED digits that
+  // has hung on the glass of Galeria Katowicka since 2019. In this collage it hangs on .KTW's glass and
+  // keeps the scene's own time.
+  const drawClock = (w, hour) => {
+    const h = hour % 24, text = String(Math.floor(h)).padStart(2, '0') + String(Math.floor(h % 1 * 60)).padStart(2, '0');
+    const lit = (x, y) => { w.px(x, y, M.BOARD_Y); w.pxLight(x, y, N.LED); };
+    [48, 52, 58, 62].forEach((x, i) => w.glyph(text[i], x, 97, lit));
+    lit(56, 98); lit(56, 100);
   };
   const drawSpodek = (w) => {
     const cx = 184;
@@ -250,8 +304,8 @@
     for(const x of [30,245,325]){w.rect(x,101,1,24,M.FRAME);w.rect(x-3,100,7,1,M.FRAME);w.lightRect(x-2,101,5,1,N.LED_SOFT,w.venueG);}
     // Flagpoles on NOSPR's forecourt stand against its brick piers, below the name.
     for(const x of [262,271,280])w.rect(x,96,1,20,M.SILVER_L);
-    // A shallow basin along the .KTW podium, behind every walking lane.
-    w.rect(84,117,37,2,M.STONE_D);w.rect(86,115,33,2,M.WATER);
+    // A shallow basin along the .KTW podium, behind every walking lane and clear of the Żabka's window.
+    w.rect(46,117,37,2,M.STONE_D);w.rect(48,115,33,2,M.WATER);
     w.puffs=[{x:96,y:40,w:25,h:6,lobes:3,v:.7},{x:214,y:27,w:37,h:8,lobes:4,v:.5},{x:318,y:50,w:17,h:4,lobes:2,v:.9}];
     w.tram={p:6};w.bike={x:300};
     w.cat.x=252;w.cat.y=122;
@@ -262,9 +316,9 @@
     Object.assign(w.personStyles,{coat:[M.GRASS_D,M.SUIT,M.HAIR],rust:[M.BRICK,M.SUIT,M.TIMBER_D],pale:[M.SILVER_L,M.TOWER_D,M.HAIR],blue:[M.SHIRT_B,M.FRAME,M.COAT]});
   };
   const draw=(w,dt,hour)=>{
-    drawSky(w,dt,hour);drawTram(w,dt);
+    drawSky(w,dt,hour);drawTram(w,dt);drawClock(w,hour);
     // The plaza jets pulse in front of the podium, behind the walking lanes and away from all signs.
-    for(const x of [95,102,109]){
+    for(const x of [57,64,71]){
       const height=3+Math.round((Math.sin(w.t*1.6+x)+1)*2.5);
       for(let j=0;j<height;j++)if((j+Math.floor(w.t*12))%4!==0)w.tube(x,115-j,M.WATER,N.WATER_LIGHT,w.venueG);
       w.px(x-1,115-height,M.TRIM);

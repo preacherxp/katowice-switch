@@ -1,6 +1,6 @@
 # Katowice scene references
 
-Researched 9 November 2026 for the sky, tree, cyclist, tram, flags and night additions. The landmarks themselves (.KTW, Spodek, NOSPR) were drawn earlier from the sources in the README and are not covered again here. The scene is a **compressed panorama** of the Culture Zone, not a single street view.
+Researched 9 November 2026 for the sky, tree, cyclist, tram, flags and night additions, and 10 November 2026 for the Żabka, the clock and the Vaillant logo. The landmarks themselves (.KTW, Spodek, NOSPR) were drawn earlier from the sources in the README and are not covered again here. The scene is a **compressed panorama** of the Culture Zone, not a single street view.
 
 ## What was added and why
 
@@ -11,6 +11,9 @@ Researched 9 November 2026 for the sky, tree, cyclist, tram, flags and night add
 | **Forecourt trees** | NOSPR's own photographs show young, slender, white-stemmed trees on the forecourt, lit from ground spots after dark. NOSPR's text names only hornbeam, for the garden labyrinth. [NOSPR: the building](https://nospr.org.pl/pl/o-nas/spacer) | Slim white trunk with dark marks, narrow upright crown widest below the middle, light yellow-green foliage, a short warm glow on the stem at night. |
 | **Forecourt flags** | The NOSPR dusk photograph shows a row of flagpoles in front of the entrance with white-and-red, EU and Polskie Radio flags. | Three pale poles against the brick piers; white-and-red, blue, white-and-red flags that stir. |
 | **NOSPR at night** | The same photograph shows warm light through the full height of the slots between the brick piers. | The upper part of each slot now lights on the staggered window groups; the lower part and the entrance stay on the venue group. |
+| **Żabka Nano in .KTW** | Żabka's own Nano site lists **al. Roździeńskiego 1a** as one of its two Katowice locations: an unstaffed shop open 24/7, entered with a payment card or the app. [Żabka Nano: Katowice](https://nano.zabka.pl/lokalizacje/katowice/). A 6 May 2026 article places it in the smaller tower, .KTW I. [24kato.pl](https://www.24kato.pl/wieza-bankowa-w-katowicach-na-parterze-tego-biurowca-sa-juz-placowki-pieciu-bankow) | Under the lower tower: a band of dark glass with dark fins, the name and the smile in pale cream-green applied straight to the glass (there is no green fascia), a thin canopy over a glass door, the entry terminal's screen beside it, and a bright interior with lime-green wall panels and shelves of goods, lit all day and all night. |
+| **Vaillant on .KTW II** | Vaillant Group Business Services Poland opened its IT hub on the 22nd floor of .KTW II on 21 February 2024; the registry gives al. Roździeńskiego 1B from 1 February 2024. [propertydesign.pl](https://www.propertydesign.pl/design/185/tak_sie_pracuje_w_najwyzszym_budynku_w_katowicach_zagladamy_do_biura_vaillant_w_ktw_ii,49508.html), [wkatowicach.eu](https://www.wkatowicach.eu/informacje/w-katowicach/-Grupa-Vaillant-wprowadzila-sie-do-KTW-II-Zajmie-biura-na-22-pietrze-Zdjecia/idn:5829), [Śląska Opinia](https://slaskaopinia.pl/2024/02/22/grupa-vaillant-otwiera-nowy-it-site-w-katowicach/) | The same mark as in the Remscheid scene: a black hare's head facing forward with its ears through a green egg outline, 11 × 13 pixels, above the name on a dark panel. At night the egg is a white lightbox with a green rim and the name glows pale green. |
+| **The station clock** | The clock from the forecourt of the old railway station, a meeting point known as "pod zegarem", was restored and unveiled on 13 September 2019 on the glass façade of Galeria Katowicka, by the entrance nearest the station. [Super Express](https://www.se.pl/slask/katowice-mieszkancy-odzyskali-dawne-miejsce-spotkan-wrocil-kultowy-zegar-zdjecia-wideo-aa-88Rq-p8dg-1EKc.html) | A black box hung in front of glass with four amber LED digits and a colon. It shows the scene's own hour and minute and glows by day as well. |
 
 ## Inspected image references
 
@@ -21,6 +24,8 @@ These were opened as actual images. They are drawing references only; nothing is
 - **Metrorower bicycles:** [Metropolia GZM / Nextbike](https://metropoliagzm.pl/wp-content/uploads/2024/02/122-1024x684.jpg) (February 2024). Rows of new bicycles: frame, fairing, basket and rear light.
 - **NOSPR by day:** [NOSPR](https://nospr.org.pl/public/upload/media/desktop/5dbfe87101f8f.jpg) (capture date not stated). Forecourt trees with white stems and the amphitheatre.
 - **NOSPR at dusk from above:** [NOSPR](https://nospr.org.pl/public/upload/media/desktop/5dbfeb563948f.jpg) (capture date not stated). Flagpoles, uplit trees, lit slots between the piers, the round pool with a fountain.
+- **Żabka Nano:** [Wikimedia Commons, "Żabka Nano, Katowice"](https://commons.wikimedia.org/wiki/File:%C5%BBabka_Nano,_Katowice.jpg) by The wub, CC BY-SA 4.0, taken 11 August 2024 at 50.264461, 19.026197 and categorised under .KTW. Source of the lettering, its colour and placement, the canopy, the terminal and the green interior.
+- **Station clock:** [Super Express gallery photograph](https://cdn.galleries.smcloud.net/thumbs/gf-wH7i-X8d4-wxT4_kultowy-zegar-wrocil-do-katowic-9-j.jpg) (September 2019). The box on the glass above the "Galeria Katowicka" entrance, reading 18:31 in amber.
 
 ## Composition notes
 
@@ -28,11 +33,17 @@ These were opened as actual images. They are drawing references only; nothing is
 - The tram runs at `y = 106..111`, behind everything at depth 2. It is seen left of .KTW, in the slots of the .KTW podium and in the two gaps under the Spodek's rim (`x = 125..154` and `219..248`), pauses in the left gap for the Rondo stop and reverses out of sight behind NOSPR. The sky under the rim stays open above it.
 - The Metrorower rides right to left along the cycle path with its wheels on `y = 147`; its rider's helmet reaches `y = 135`, four pixels below the lowest walking lane (`y = 131`).
 - Flagpoles stand at `x = 262, 271, 280`, `y = 96..115`, 22 pixels below the NOSPR name.
+- The Żabka occupies `x = 92..123`, `y = 94..112` under the lower tower; its name sits at `y = 97..101` with the dot of the Ż above and the smile below. The basin and its jets moved from in front of that podium to `x = 46..82`, in front of the taller tower, so that water does not cross the shop window.
+- The Vaillant hare stands at `x = 56..66`, `y = 46..58` on the middle volume of the taller tower, with the name on a panel at `x = 43..80`, `y = 61..67`, 37 pixels below the .KTW name and 27 above the clock.
+- The clock box hangs at `x = 46..66`, `y = 95..103` on the taller tower, above the podium windows and the jets and below every lit sign.
 
 ## Limits
 
 - No photograph was found of a tram at Katowice Rondo with the Spodek behind it from the scene's side; that the tram is visible under the rim is part of the collage. Route numbers are not shown.
 - The ZTM timetables that were found end on 3 November 2026 and the stop page snippet dates from November 2025; the lines serving Rondo this week were not confirmed. The mix of older, differently painted cars on these lines was not researched; only the current red low-floor livery is drawn.
+- Vaillant is a tenant, but no photograph or report of a Vaillant sign on the outside of .KTW II was found. The logo on the façade was requested for the scene and is not claimed to exist. The articles on the office were found through search results and their photographs were not opened; the mark itself follows the references gathered for the Remscheid scene.
+- The station clock is about a kilometre south of the Culture Zone. Hanging it on .KTW is part of the collage; .KTW has no such clock. Only one photograph of it was opened, from 2019, and its present state was not checked.
+- The Żabka photograph is from August 2024 and shows the shop by day. Its look after dark was not seen: the soft light on the lettering at night is for legibility. "24/7 Nano", which stands beside the name on the real glass, does not fit at this scale and is left out, and the letters are capitals where the real mark is lower case.
 - No Metrorower station at the Spodek or in the Culture Zone was confirmed, so no station is drawn, only a hired bicycle passing.
 - The species of the white-stemmed forecourt trees is not named by NOSPR; they are drawn from the photographs as birch-like and are not claimed to be birches.
 - The NOSPR photographs are undated, so the flags and tree sizes may differ today. No on-site visit or November 2026 photographs were available.

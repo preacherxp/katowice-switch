@@ -16,7 +16,7 @@ node test-scene.cjs
 ```
 
 Open http://localhost:8000. The scene test checks day, dusk, night, dawn,
-lighting, the cat interaction and reduced motion. See [AGENTS.md](AGENTS.md)
+lighting, the clock, the cat interaction and reduced motion. See [AGENTS.md](AGENTS.md)
 for actual-browser composition and interaction checks.
 
 ## Embed
@@ -39,8 +39,11 @@ GitHub Pages serves `/` from `main`.
 - [Spodek official architecture reference](https://www.spodekkatowice.pl/pl/historia/51/).
 - [Tramwaje Śląskie fleet](https://www.tram-silesia.pl/o-spolce/wagony-tramwajowe/) and the [Katowice Rondo stop](https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3695/), for the red tram behind the Spodek.
 - [Metrorower launch, Metropolia GZM](https://metropoliagzm.pl/en/2024/02/02/metrorower-rusza-25-lutego/), for the yellow hire bicycle.
+- [Żabka Nano locations in Katowice](https://nano.zabka.pl/lokalizacje/katowice/) and a [2024 photograph of the shop in .KTW](https://commons.wikimedia.org/wiki/File:%C5%BBabka_Nano,_Katowice.jpg) (The wub, CC BY-SA 4.0), for the shopfront under the lower tower.
+- [Vaillant's office in .KTW II, propertydesign.pl](https://www.propertydesign.pl/design/185/tak_sie_pracuje_w_najwyzszym_budynku_w_katowicach_zagladamy_do_biura_vaillant_w_ktw_ii,49508.html), for the tenant behind the hare on the taller tower. No sign on the real façade was found; the logo is an addition to the collage.
+- [The station clock's return in 2019, Super Express](https://www.se.pl/slask/katowice-mieszkancy-odzyskali-dawne-miejsce-spotkan-wrocil-kultowy-zegar-zdjecia-wideo-aa-88Rq-p8dg-1EKc.html), for the amber LED clock. It really hangs on Galeria Katowicka by the station; here it is part of the collage and shows the scene's own time.
 
-[RESEARCH.md](RESEARCH.md) lists the photographs that were opened for the tram, the bicycle, the forecourt trees and flags, and what could not be verified.
+[RESEARCH.md](RESEARCH.md) lists the photographs that were opened for the tram, the bicycle, the forecourt trees and flags, the Żabka and the clock, and what could not be verified.
 
 ## Attribution
 

@@ -47,6 +47,18 @@ assert.equal(world.t, frozenTime, 'reduced motion stops the scene animation');
 assert.deepEqual([world.tram.p, world.bike.x, world.puffs[0].x], moved, 'reduced motion stills the tram, the Metrorower and the clouds');
 assert.equal(world.levels[world.venueG], 1);
 
+// The station clock keeps the scene's time: its lit digits change with the hour and agree at both noons.
+const clock = (hour) => {
+  world.tick(0, hour, { calm: true });
+  let lit = '';
+  for (let y = 97; y < 102; y++) for (let x = 48; x < 65; x++) lit += world.fneon[(y + 40) * 400 + x + 40] ? '#' : '.';
+  return lit;
+};
+assert.ok(clock(12).includes('#'), 'the clock is lit by day');
+assert.notEqual(clock(12), clock(22.5), 'the clock follows the hour');
+assert.equal(clock(12), clock(36), 'the clock reads 12:00 at both noons');
+assert.equal(world.levels[world.store], 1, 'the Żabka is lit round the clock');
+
 // Optional raw frames let the same check produce a visual preview without browser dependencies.
 if (process.argv[2]) {
   for (const hour of [12, 18, 22]) {
@@ -54,4 +66,4 @@ if (process.argv[2]) {
     fs.writeFileSync(path.join(process.argv[2], `katowice-${hour}.rgba`), world.rgba);
   }
 }
-console.log('Katowice: day, dusk, night, dawn, venue lighting and reduced motion passed.');
+console.log('Katowice: day, dusk, night, dawn, venue lighting, the clock and reduced motion passed.');
