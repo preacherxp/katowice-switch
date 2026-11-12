@@ -2,7 +2,7 @@
 
 Contemporary Katowice in a pixel-art day/night switch. The Culture Zone with .KTW towers, NOSPR and Spodek.
 
-[Live demo](https://preacherxp.github.io/katowice-switch/) · [60 fps MP4](katowice-day-night-60fps.mp4) · [Instagram 4:5 MP4](katowice-instagram-4x5-60fps.mp4) · [Instagram cover](katowice-instagram-cover.jpg)
+[Live demo](https://preacherxp.github.io/katowice-switch/) · [60 fps MP4](katowice-day-night-60fps.mp4) · [Instagram 4:5 MP4](katowice-instagram-4x5-60fps.mp4) · [Instagram cover](katowice-instagram-cover.jpg) · Phase covers: [day](katowice-instagram-cover-1-daytime.jpg), [golden hour](katowice-instagram-cover-2-golden-hour.jpg), [signs on](katowice-instagram-cover-3-signs-coming-on.jpg), [night](katowice-instagram-cover-4-night.jpg), [dawn](katowice-instagram-cover-5-dawn.jpg), [morning](katowice-instagram-cover-6-morning.jpg)
 
 The landmarks form a compressed panorama, rather than a literal street view.
 No build step or runtime dependencies. Drag through the hours, tap or press
@@ -51,4 +51,4 @@ The engine is derived from `tokyo-switch.js`; the original idea is “住人の�
 by @Lattice_Node ([original project](https://ludion.ai/p/toggle-daylight), MIT),
 as credited in the engine source.
 
-The MP4 is a seven-second recording of the complete browser-rendered switch at 1600 × 1000 and 60 fps, including the moving glass lens. The Instagram MP4 is the same loop at 1080 × 1350 (4:5), and its cover is a still from the night hold; both keep the whole switch inside the 3:4 profile-grid crop.
+The MP4 is a seven-second recording of the complete browser-rendered switch at 1600 × 1000 and 60 fps, including the moving glass lens. The Instagram MP4 is the same loop at 1080 × 1350 (4:5), its cover is a still from the night hold, and the six phase covers show the lens at rest at 12:00, 17:00, 18:45, 22:00, 06:00 and 08:30; all keep the whole switch inside the 3:4 profile-grid crop.
